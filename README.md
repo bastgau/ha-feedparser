@@ -31,16 +31,22 @@ If you encounter any issues or wish to contribute to improving this integration,
 
 ## Installation
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
+### Installation via HACS
 
-1. Open HACS Settings and add this repository (https://github.com/bastgau/ha-feedparser/)
-   as a Custom Repository (use **Integration** as the category).
-2. The `feedparser` page should automatically load (or find it in the HACS Store)
-3. Click `Install`
+1. Add this repository as a custom repository to HACS:
 
-Alternatively, click on the button below to add the repository:
+[![Add Repository](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=bastgau&repository=ha-feedparser&category=Integration)
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?category=Integration&repository=ha-feedparser&owner=bastgau)
+2. Use HACS to install the integration.
+3. Restart Home Assistant.
+4. Set up the integration by adding a `sensor` entry to your `configuration.yaml`, as described in [Configuration](#configuration), then restart Home Assistant.
+
+### Manual Installation
+
+1. Download the integration files from the GitHub repository.
+2. Place the `feedparser` folder in the `custom_components` directory of Home Assistant.
+3. Restart Home Assistant.
+4. Set up the integration by adding a `sensor` entry to your `configuration.yaml`, as described in [Configuration](#configuration), then restart Home Assistant.
 
 ## Configuration
 
