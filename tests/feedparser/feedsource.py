@@ -3,19 +3,13 @@ from datetime import datetime, timedelta
 from functools import cached_property
 import json
 from pathlib import Path
-from typing import Any
-
-import yaml
 
 from tests.feedparser.constants import (
     DATA_PATH,
     DATE_FORMAT,
     DEFAULT_EXCLUSIONS,
     DEFAULT_INCLUSIONS,
-    TEST_HASS_PATH,
 )
-
-yaml.Dumper.ignore_aliases = lambda *args: True  # type: ignore[method-assign] # noqa: ARG005, E501
 
 
 class FeedSource:
@@ -149,32 +143,6 @@ class FeedSource:
     ) -> dict[str, str | int | bool | list[str]]:
         """Gen. sensor config for the FeedParserSensor constructor with local feed."""
         return self.feed_parser_sensor_config | {"feed": self.path.absolute().as_uri()}
-
-    @property
-    def ha_config_entry(self: "FeedSource") -> dict[str, Any]:
-        """Generate HA config entry."""
-        return self._common_config | {
-            "platform": "feedparser",
-            "feed_url": self.url,
-            "scan_interval": {"seconds": self.sensor_config.scan_interval},
-        }
-
-    @classmethod
-    def gen_ha_sensors_yml_config(
-        cls: type["FeedSource"],
-        sensors: list["FeedSource"],
-    ) -> str:
-        """Generate HA "sensors" config."""
-        return yaml.dump([s.ha_config_entry for s in sensors])
-
-    @classmethod
-    def create_ha_sensors_config_file(
-        cls: type["FeedSource"],
-        sensors: list["FeedSource"],
-    ) -> None:
-        """Create HA "sensors" config file."""
-        sensors_yml = TEST_HASS_PATH / "sensors.yaml"
-        sensors_yml.write_text(cls.gen_ha_sensors_yml_config(sensors))
 
 
 class FeedConfig:

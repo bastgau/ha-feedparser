@@ -3,7 +3,6 @@ from pathlib import Path
 
 TESTS_PATH = Path(__file__).parent
 DATA_PATH = TESTS_PATH / "data"
-TEST_HASS_PATH = Path(__file__).parents[2] / "test_hass"
 
 TEST_FEEDS = [
     {
