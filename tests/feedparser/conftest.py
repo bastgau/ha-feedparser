@@ -1,6 +1,7 @@
 """Pytest configuration."""
 
 from collections.abc import Iterator
+from pathlib import Path
 import socket
 
 from custom_components.feedparser.sensor import FeedParserSensor
@@ -11,6 +12,30 @@ from tests.feedparser.feedsource import FeedSource
 
 # Captured at import time, before the Home Assistant test plugin replaces it for each test.
 _REAL_GETADDRINFO = socket.getaddrinfo
+
+TWO_ITEMS_FEED = """<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel>
+  <title>Local feed</title><link>https://example.com</link><description>Local feed</description>
+  <item><title>First</title><link>https://example.com/first</link></item>
+  <item><title>Second</title><link>https://example.com/second</link></item>
+</channel></rss>
+"""
+
+
+@pytest.fixture
+def local_feed_url(tmp_path: Path) -> str:
+    """Write a feed with two items in a temporary folder.
+
+    Args:
+        tmp_path (Path): Temporary folder of the test.
+
+    Returns:
+        str: file URL of the feed.
+
+    """
+    feed_path = tmp_path / "local_feed.xml"
+    feed_path.write_text(TWO_ITEMS_FEED, encoding="utf-8")
+    return feed_path.as_uri()
 
 
 @pytest.fixture

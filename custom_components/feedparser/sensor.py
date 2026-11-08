@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 import email.utils
 import logging
 import re
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from dateutil import parser
 import voluptuous as vol
@@ -14,6 +14,7 @@ import voluptuous as vol
 from homeassistant.components.sensor import PLATFORM_SCHEMA, SensorEntity
 from homeassistant.const import CONF_NAME, CONF_SCAN_INTERVAL
 import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers.entity_platform import async_get_current_platform
 from homeassistant.util import dt
 
 from .const import (
@@ -36,6 +37,7 @@ from .const import (
 from .feedparser_wrapper import IMAGE_REGEX, FeedClient, find_image_url, find_link
 
 if TYPE_CHECKING:
+    from homeassistant.config_entries import ConfigEntry
     from homeassistant.core import HomeAssistant
     from homeassistant.helpers.entity_platform import AddEntitiesCallback
     from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
@@ -62,6 +64,65 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(  # pyright: ignore[reportConstantRedef
 )
 
 _LOGGER: logging.Logger = logging.getLogger(__name__)
+
+
+def _to_timedelta(value: object) -> timedelta:
+    """Convert a scan interval setting to a timedelta.
+
+    Args:
+        value (object): A timedelta (YAML), or timedelta arguments such as {"hours": 1} (config flow).
+
+    Returns:
+        timedelta: The interval, or the default one when the setting is missing or not understood.
+
+    """
+    if isinstance(value, timedelta):
+        return value
+    if isinstance(value, dict):
+        return timedelta(**cast("dict[str, float]", value))
+    return DEFAULT_SCAN_INTERVAL
+
+
+async def async_setup_entry(
+    hass: HomeAssistant,  # noqa: ARG001
+    entry: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
+) -> None:
+    """Set up the Feedparser sensor of a config entry.
+
+    Args:
+        hass (HomeAssistant): Home Assistant instance, unused.
+        entry (ConfigEntry): Config entry holding the feed (data) and its settings (options).
+        async_add_entities (AddEntitiesCallback): Callback registering the entities of the platform.
+
+    """
+    settings: dict[str, Any] = {**entry.data, **entry.options}
+    scan_interval = _to_timedelta(settings.get(CONF_SCAN_INTERVAL))
+
+    # The entities of a platform are polled at the platform's interval, which must be set before
+    # they are added: each config entry has its own platform instance, so its own interval.
+    platform = async_get_current_platform()
+    platform.scan_interval = scan_interval
+    platform.scan_interval_seconds = scan_interval.total_seconds()
+
+    async_add_entities(
+        [
+            FeedParserSensor(
+                feed=settings[CONF_FEED_URL],
+                name=settings[CONF_NAME],
+                date_format=settings.get(CONF_DATE_FORMAT, DEFAULT_DATE_FORMAT),
+                show_topn=int(settings.get(CONF_SHOW_TOPN, DEFAULT_TOPN)),
+                remove_summary_image=settings.get(CONF_REMOVE_SUMMARY_IMG, DEFAULT_REMOVE_SUMMARY_IMG),
+                inclusions=settings.get(CONF_INCLUSIONS, []),
+                exclusions=settings.get(CONF_EXCLUSIONS, []),
+                scan_interval=scan_interval,
+                local_time=settings.get(CONF_LOCAL_TIME, DEFAULT_LOCAL_TIME),
+                user_agent=settings.get(CONF_USER_AGENT, USER_AGENT),
+                unique_id=entry.entry_id,
+            ),
+        ],
+        update_before_add=True,
+    )
 
 
 async def async_setup_platform(
@@ -105,6 +166,7 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
         _attr_force_update (bool): Update the entity even when the number of entries did not change.
         _feed (str): URL of the feed.
         _attr_name (str): Name of the sensor.
+        _attr_unique_id (str | None): Unique id of the entity, set for sensors created from a config entry.
         _attr_icon (str): Icon of the sensor.
         _date_format (str): strftime format of the dates of the entries.
         _show_topn (int): Maximum number of entries kept.
@@ -135,6 +197,7 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
         scan_interval: timedelta,
         local_time: bool,
         user_agent: str = USER_AGENT,
+        unique_id: str | None = None,
     ) -> None:
         """Initialize the Feedparser sensor.
 
@@ -149,10 +212,12 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
             scan_interval (timedelta): Time between two updates of the feed.
             local_time (bool): Whether to convert the dates of the entries to the local time zone.
             user_agent (str): Value of the User-Agent header sent when fetching the feed.
+            unique_id (str | None): Unique id of the entity, set for sensors created from a config entry.
 
         """
         self._feed = feed
         self._attr_name = name
+        self._attr_unique_id = unique_id
         self._attr_icon = "mdi:rss"
         self._date_format = date_format
         self._show_topn: int = show_topn

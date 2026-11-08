@@ -1,0 +1,72 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add a feed",
+        "description": "Enter the name and the URL of the RSS or Atom feed to follow. The feed is fetched once to check that it can be read.",
+        "data": {
+          "name": "Name",
+          "feed_url": "Feed URL",
+          "date_format": "Date format",
+          "local_time": "Use local time",
+          "scan_interval": "Refresh interval",
+          "show_topn": "Maximum number of entries",
+          "remove_summary_image": "Remove images from the summary",
+          "inclusions": "Fields to include",
+          "exclusions": "Fields to exclude",
+          "user_agent": "User-Agent"
+        },
+        "data_description": {
+          "feed_url": "Address of the feed (http, https or file).",
+          "date_format": "strftime format used for the dates of the entries.",
+          "local_time": "Convert the dates of the entries to the time zone of Home Assistant.",
+          "scan_interval": "Time between two refreshes of the feed. At least one minute.",
+          "show_topn": "Only the most recent entries of the feed are kept.",
+          "remove_summary_image": "Strip the <img> tags from the summary of the entries.",
+          "inclusions": "Keep only these fields of each entry. Leave empty to keep all of them. Add `image` to get the URL of the first image.",
+          "exclusions": "Remove these fields from each entry.",
+          "user_agent": "Value of the User-Agent header sent to the server. Some servers block or stall unknown clients."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "The feed could not be fetched. Check the address and try again.",
+      "invalid_url": "The address must start with http://, https:// or file://.",
+      "scan_interval_too_short": "The refresh interval must be at least one minute."
+    },
+    "abort": {
+      "already_configured": "This feed is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Feed settings",
+        "description": "Saving these settings reloads this feed.",
+        "data": {
+          "date_format": "Date format",
+          "local_time": "Use local time",
+          "scan_interval": "Refresh interval",
+          "show_topn": "Maximum number of entries",
+          "remove_summary_image": "Remove images from the summary",
+          "inclusions": "Fields to include",
+          "exclusions": "Fields to exclude",
+          "user_agent": "User-Agent"
+        },
+        "data_description": {
+          "date_format": "strftime format used for the dates of the entries.",
+          "local_time": "Convert the dates of the entries to the time zone of Home Assistant.",
+          "scan_interval": "Time between two refreshes of the feed. At least one minute.",
+          "show_topn": "Only the most recent entries of the feed are kept.",
+          "remove_summary_image": "Strip the <img> tags from the summary of the entries.",
+          "inclusions": "Keep only these fields of each entry. Leave empty to keep all of them. Add `image` to get the URL of the first image.",
+          "exclusions": "Remove these fields from each entry.",
+          "user_agent": "Value of the User-Agent header sent to the server. Some servers block or stall unknown clients."
+        }
+      }
+    },
+    "error": {
+      "scan_interval_too_short": "The refresh interval must be at least one minute."
+    }
+  }
+}
