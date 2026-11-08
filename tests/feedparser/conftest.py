@@ -20,6 +20,13 @@ def network_enabled(socket_enabled: None) -> Iterator[None]:  # pylint: disable=
     The Home Assistant test plugin blocks sockets and replaces DNS resolution with a
     function that rejects every host name. `socket_enabled` lifts the first restriction,
     this fixture restores the real resolver for the duration of the test.
+
+    Args:
+        socket_enabled (None): Upstream fixture re-enabling sockets.
+
+    Yields:
+        None: Control to the test, with the real DNS resolver in place.
+
     """
     patched_getaddrinfo = socket.getaddrinfo
     socket.getaddrinfo = _REAL_GETADDRINFO
@@ -28,12 +35,22 @@ def network_enabled(socket_enabled: None) -> Iterator[None]:  # pylint: disable=
 
 
 def get_feeds() -> list[FeedSource]:
-    """Return list of feeds represented by FeedSource objects."""
+    """Return list of feeds represented by FeedSource objects.
+
+    Returns:
+        list[FeedSource]: One FeedSource per feed of TEST_FEEDS.
+
+    """
     return [FeedSource(feed) for feed in TEST_FEEDS]
 
 
 def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
-    """Generate tests and fixtures."""
+    """Generate tests and fixtures.
+
+    Args:
+        metafunc (pytest.Metafunc): Pytest object describing the test function being collected.
+
+    """
     feeds = get_feeds()
     if "feed" in metafunc.fixturenames:
         metafunc.parametrize("feed", feeds, ids=[f.name for f in feeds], indirect=True)
@@ -55,13 +72,29 @@ def pytest_generate_tests(metafunc: pytest.Metafunc) -> None:
 
 @pytest.fixture
 def feed(request: pytest.FixtureRequest) -> FeedSource:
-    """Return feed file source."""
+    """Return feed file source.
+
+    Args:
+        request (pytest.FixtureRequest): Request carrying the parametrized feed.
+
+    Returns:
+        FeedSource: The feed of the current parametrization.
+
+    """
     return request.param
 
 
 @pytest.fixture
 def feed_sensor(feed: FeedSource) -> FeedParserSensor:  # pylint: disable=redefined-outer-name
-    """Return feed sensor initialized with the local RSS feed."""
+    """Return feed sensor initialized with the local RSS feed.
+
+    Args:
+        feed (FeedSource): The feed of the current parametrization.
+
+    Returns:
+        FeedParserSensor: A sensor reading the local copy of the feed.
+
+    """
     return FeedParserSensor(**feed.sensor_config_local_feed)
 
 
@@ -69,5 +102,13 @@ def feed_sensor(feed: FeedSource) -> FeedParserSensor:  # pylint: disable=redefi
 def feed_with_image_in_summary(
     request: pytest.FixtureRequest,
 ) -> FeedSource:
-    """Return feed sensor with images in summary of its entries."""
+    """Return feed sensor with images in summary of its entries.
+
+    Args:
+        request (pytest.FixtureRequest): Request carrying the parametrized feed.
+
+    Returns:
+        FeedSource: A feed whose entries have images in their summary.
+
+    """
     return request.param
