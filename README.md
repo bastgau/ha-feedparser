@@ -2,20 +2,32 @@
 
 RSS feed custom component for [Home Assistant](https://www.home-assistant.io/) which can be used in conjunction with the custom [Lovelace](https://www.home-assistant.io/lovelace) [list-card](https://github.com/custom-cards/list-card)
 
-[![GitHub Release][releases-shield]][releases]
-[![License][license-shield]](LICENSE)
+[![Maintainer: bastgau](https://img.shields.io/badge/maintainer-bastgau-orange?logo=github&logoColor=%23959da5&labelColor=%232d333a)](https://github.com/bastgau)
+[![Made with Python](https://img.shields.io/badge/Made_with-Python-blue?style=flat&logo=python&logoColor=%23959da5&labelColor=%232d333a)](https://www.python.org/)
+[![Made for Home Assistant](https://img.shields.io/badge/Made_for-Homeassistant-blue?style=flat&logo=homeassistant&logoColor=%23959da5&labelColor=%232d333a)](https://www.home-assistant.io/)
+[![GitHub Release](https://img.shields.io/github/v/release/bastgau/ha-feedparser?logo=github&logoColor=%23959da5&labelColor=%232d333a&color=%230e80c0)](https://github.com/bastgau/ha-feedparser/releases)
+[![HACS validation](https://github.com/bastgau/ha-feedparser/actions/workflows/validate-for-hacs.yml/badge.svg)](https://github.com/bastgau/ha-feedparser/actions/workflows/validate-for-hacs.yml)
+[![HASSFEST validation](https://github.com/bastgau/ha-feedparser/actions/workflows/validate-with-hassfest.yml/badge.svg)](https://github.com/bastgau/ha-feedparser/actions/workflows/validate-with-hassfest.yml)
 
-![Project Maintenance][maintenance-shield]
-[![GitHub Activity][commits-shield]][commits]
+## About this fork
 
-[![Discord][discord-shield]][discord]
-[![Community Forum][forum-shield]][forum]
+This project is a fork of [custom-components/feedparser](https://github.com/custom-components/feedparser), the RSS feed integration for Home Assistant created by [Ian Richardson](https://github.com/iantrich) and developed since then by [Ondřej Gajdušek](https://github.com/ogajduse) and the other contributors of the original project.
+
+A big thank you to all of them: the idea, the design and the vast majority of the code are theirs, and this fork would not exist without their work. The original MIT license and its copyright notice are kept unchanged.
+
+This fork is maintained by [Bastien Gautier](https://github.com/bastgau). It stays based on the original code and currently adds:
+
+- a `user_agent` option, to send a browser User-Agent to servers that block or stall unknown clients (a contribution of [Dave Nicoll](https://github.com/davenicoll));
+- images read from `media:content` elements, which is handy for Mastodon feeds (a contribution of [Piotr Gaczkowski](https://github.com/DoomHammer));
+- a small typed wrapper around `feedparser`, a reorganised test suite and strict linting.
+
+Both contributions were first proposed to the original repository, and their authors' names are kept in the Git history. If you run into a problem that also exists in the original project, feel free to report it there too.
 
 ## Support
 
-Hey dude! Help me out for a couple of :beers: or a :coffee:!
+If you encounter any issues or wish to contribute to improving this integration, feel free to open an issue or a pull request on the GitHub repository.
 
-[![coffee](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](https://www.buymeacoffee.com/zJtVxUAgH)
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/bastgau)
 
 ## Installation
 
@@ -90,14 +102,3 @@ Note that the original `pubDate` field is available under `published` attribute 
 Note: Will return all fields if no inclusions or exclusions are specified
 
 Due to how `custom_components` are loaded, it is normal to see a `ModuleNotFoundError` error on first boot after adding this, to resolve it, restart Home-Assistant.
-
-[commits-shield]: https://img.shields.io/github/commit-activity/y/bastgau/ha-feedparser.svg?style=for-the-badge
-[commits]: https://github.com/bastgau/ha-feedparser/commits/main
-[discord]: https://discord.gg/Qa5fW2R
-[discord-shield]: https://img.shields.io/discord/330944238910963714.svg?style=for-the-badge
-[forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
-[forum]: https://community.home-assistant.io/t/custom-component-rss-feed-parser/64637
-[license-shield]: https://img.shields.io/github/license/bastgau/ha-feedparser.svg?style=for-the-badge
-[maintenance-shield]: https://img.shields.io/badge/maintainer-Bastien%20Gautier%20%40bastgau-blue.svg?style=for-the-badge
-[releases-shield]: https://img.shields.io/github/release/bastgau/ha-feedparser.svg?style=for-the-badge
-[releases]: https://github.com/bastgau/ha-feedparser/releases

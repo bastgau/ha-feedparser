@@ -1,7 +1,7 @@
 {
   "domain": "feedparser",
   "name": "Feedparser",
-  "codeowners": ["@iantrich", "@ogajduse"],
+  "codeowners": ["@bastgau"],
   "dependencies": [],
   "documentation": "https://github.com/bastgau/ha-feedparser/blob/main/README.md",
   "iot_class": "cloud_polling",
