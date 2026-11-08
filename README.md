@@ -1,4 +1,5 @@
 # sensor.feedparser
+
 RSS feed custom component for [Home Assistant](https://www.home-assistant.io/) which can be used in conjunction with the custom [Lovelace](https://www.home-assistant.io/lovelace) [list-card](https://github.com/custom-cards/list-card)
 
 [![GitHub Release][releases-shield]][releases]
@@ -11,12 +12,13 @@ RSS feed custom component for [Home Assistant](https://www.home-assistant.io/) w
 [![Community Forum][forum-shield]][forum]
 
 ## Support
+
 Hey dude! Help me out for a couple of :beers: or a :coffee:!
 
 [![coffee](https://www.buymeacoffee.com/assets/img/custom_images/black_img.png)](https://www.buymeacoffee.com/zJtVxUAgH)
 
-
 ## Installation
+
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
 
 1. Open HACS Settings and add this repository (https://github.com/custom-components/feedparser/)
@@ -28,7 +30,6 @@ Alternatively, click on the button below to add the repository:
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?category=Integration&repository=feedparser&owner=custom-components)
 
-
 ## Configuration
 
 **Example configuration.yaml:**
@@ -37,8 +38,8 @@ Alternatively, click on the button below to add the repository:
 sensor:
   - platform: feedparser
     name: Engineering Feed
-    feed_url: 'https://www.sciencedaily.com/rss/matter_energy/engineering.xml'
-    date_format: '%a, %d %b %Y %H:%M:%S %Z'
+    feed_url: "https://www.sciencedaily.com/rss/matter_energy/engineering.xml"
+    date_format: "%a, %d %b %Y %H:%M:%S %Z"
     scan_interval:
       hours: 3
     inclusions:
@@ -61,7 +62,7 @@ sensor:
   - platform: feedparser
     name: Picky Server Feed
     feed_url: https://example.com/rss
-    user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36'
+    user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36"
 ```
 
 If you wish the integration to look for enclosures in the feed entries, add `image` to `inclusions` list. Do not use `enclosure`.
@@ -71,20 +72,20 @@ Note that the original `pubDate` field is available under `published` attribute 
 
 **Configuration variables:**
 
-key | description
-:--- | :---
-**platform (Required)** | The platform name
-**name (Required)** | Name your feed
-**feed_url (Required)** | The RSS feed URL
-**date_format (Optional)** | strftime date format for date strings **Default** `%a, %b %d %I:%M %p`
-**local_time (Optional)** | Whether to convert date into local time **Default** false
-**show_topn (Optional)** | fetch how many entres from rss source，if not set then fetch all
-**inclusions (Optional)** | List of fields to include from populating the list
-**exclusions (Optional)** | List of fields to exclude from populating the list
-**scan_interval (Optional)** | Update interval in hours
-**user_agent (Optional)** | User-Agent header sent when fetching the feed **Default** `Home Assistant Feed-parser Integration <version>`
+| key                          | description                                                                                                  |
+| :--------------------------- | :----------------------------------------------------------------------------------------------------------- |
+| **platform (Required)**      | The platform name                                                                                            |
+| **name (Required)**          | Name your feed                                                                                               |
+| **feed_url (Required)**      | The RSS feed URL                                                                                             |
+| **date_format (Optional)**   | strftime date format for date strings **Default** `%a, %b %d %I:%M %p`                                       |
+| **local_time (Optional)**    | Whether to convert date into local time **Default** false                                                    |
+| **show_topn (Optional)**     | fetch how many entres from rss source，if not set then fetch all                                             |
+| **inclusions (Optional)**    | List of fields to include from populating the list                                                           |
+| **exclusions (Optional)**    | List of fields to exclude from populating the list                                                           |
+| **scan_interval (Optional)** | Update interval in hours                                                                                     |
+| **user_agent (Optional)**    | User-Agent header sent when fetching the feed **Default** `Home Assistant Feed-parser Integration <version>` |
 
-***
+---
 
 Note: Will return all fields if no inclusions or exclusions are specified
 
