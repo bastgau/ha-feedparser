@@ -17,7 +17,14 @@ classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.14",
 ]
-dependencies = []
+# Mirror of "requirements" in custom_components/feedparser/manifest.json, which is what
+# Home Assistant itself installs at runtime. Keep both in sync, with the same specifiers.
+dependencies = [
+  "feedparser==6.0.11",
+  "python-dateutil",
+  "requests-file",
+  "requests",
+]
 
 [project.urls]
 Homepage = "https://github.com/bastgau/ha-feedparser"
