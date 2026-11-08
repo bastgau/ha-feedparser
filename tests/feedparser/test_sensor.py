@@ -1,15 +1,9 @@
 """"Tests the feedparser sensor."""
 
-import re
 from contextlib import nullcontext, suppress
 from datetime import UTC, datetime
+import re
 from typing import TYPE_CHECKING, Any
-
-import feedparser
-import pytest
-import requests
-from constants import DATE_FORMAT, URLS_HEADERS_REQUIRED
-from feedsource import FeedSource
 
 from custom_components.feedparser.sensor import (
     CONF_USER_AGENT,
@@ -20,10 +14,17 @@ from custom_components.feedparser.sensor import (
     USER_AGENT,
     FeedParserSensor,
 )
+import feedparser
+import pytest
+import requests
+
+from homeassistant.util import dt as dt_util
+from tests.feedparser.constants import DATE_FORMAT, URLS_HEADERS_REQUIRED
+from tests.feedparser.feedsource import FeedSource
 
 if TYPE_CHECKING:
-    import time
     from collections.abc import Callable
+    import time
 
 
 def test_simple(feed_sensor: FeedParserSensor) -> None:
@@ -129,6 +130,9 @@ def test_update_sensor_entries_time(
     local_time: bool,
 ) -> None:
     """Test that the sensor converts the published date to local time."""
+    # The Home Assistant test fixtures default the local time zone to US/Pacific;
+    # this test compares the sensor dates with UTC dates from the feed.
+    dt_util.set_default_time_zone(UTC)
     feed_sensor.local_time = local_time
     feed_sensor.update()
     assert feed_sensor.feed_entries

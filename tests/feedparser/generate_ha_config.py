@@ -1,6 +1,6 @@
 """Generate Home Assistant sensors config from test feeds."""
-from constants import TEST_FEEDS
-from feedsource import FeedSource
+from tests.feedparser.constants import TEST_FEEDS
+from tests.feedparser.feedsource import FeedSource
 
 fsources = [FeedSource(fs) for fs in TEST_FEEDS]
 FeedSource.create_ha_sensors_config_file(fsources)

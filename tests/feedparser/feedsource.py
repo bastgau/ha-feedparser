@@ -1,12 +1,13 @@
 """Feed source class to be used in tests."""
-import json
 from datetime import datetime, timedelta
 from functools import cached_property
+import json
 from pathlib import Path
 from typing import Any
 
 import yaml
-from constants import (
+
+from tests.feedparser.constants import (
     DATA_PATH,
     DATE_FORMAT,
     DEFAULT_EXCLUSIONS,

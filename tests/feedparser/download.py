@@ -4,8 +4,9 @@ import datetime
 import json
 
 import aiohttp
-from constants import TEST_FEEDS
-from feedsource import FeedSource
+
+from tests.feedparser.constants import TEST_FEEDS
+from tests.feedparser.feedsource import FeedSource
 
 base_date = datetime.datetime.now(datetime.UTC)
 
