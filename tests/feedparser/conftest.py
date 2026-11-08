@@ -6,7 +6,6 @@ import socket
 
 from custom_components.feedparser.sensor import FeedParserSensor
 import pytest
-import pytest_socket
 
 from tests.feedparser.constants import TEST_FEEDS
 from tests.feedparser.feedsource import FeedSource
@@ -48,6 +47,9 @@ def network_enabled(socket_enabled: None) -> Iterator[None]:  # pylint: disable=
     restriction, so this fixture also allows connections to any address and restores the real resolver for
     the duration of the test. pytest-socket puts its own restrictions back when the test ends.
 
+    pytest-socket is looked up here and not at the top of the file: this conftest is also loaded by the
+    client tests, whose environment does not install it (nor does any client test use this fixture).
+
     Args:
         socket_enabled (None): Upstream fixture re-enabling sockets.
 
@@ -55,6 +57,7 @@ def network_enabled(socket_enabled: None) -> Iterator[None]:  # pylint: disable=
         None: Control to the test, with connections and the real DNS resolver allowed.
 
     """
+    pytest_socket = pytest.importorskip("pytest_socket")
     pytest_socket.socket_allow_hosts(["0.0.0.0/0", "::/0"], allow_unix_socket=True)
     patched_getaddrinfo = socket.getaddrinfo
     socket.getaddrinfo = _REAL_GETADDRINFO
