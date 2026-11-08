@@ -6,6 +6,7 @@ import socket
 
 from custom_components.feedparser.sensor import FeedParserSensor
 import pytest
+import pytest_socket
 
 from tests.feedparser.constants import TEST_FEEDS
 from tests.feedparser.feedsource import FeedSource
@@ -42,17 +43,19 @@ def local_feed_url(tmp_path: Path) -> str:
 def network_enabled(socket_enabled: None) -> Iterator[None]:  # pylint: disable=unused-argument
     """Allow a test to reach real remote servers.
 
-    The Home Assistant test plugin blocks sockets and replaces DNS resolution with a
-    function that rejects every host name. `socket_enabled` lifts the first restriction,
-    this fixture restores the real resolver for the duration of the test.
+    The Home Assistant test plugin blocks sockets, only lets connections to 127.0.0.1 through and replaces
+    DNS resolution with a function that rejects every host name. `socket_enabled` only lifts the first
+    restriction, so this fixture also allows connections to any address and restores the real resolver for
+    the duration of the test. pytest-socket puts its own restrictions back when the test ends.
 
     Args:
         socket_enabled (None): Upstream fixture re-enabling sockets.
 
     Yields:
-        None: Control to the test, with the real DNS resolver in place.
+        None: Control to the test, with connections and the real DNS resolver allowed.
 
     """
+    pytest_socket.socket_allow_hosts(["0.0.0.0/0", "::/0"], allow_unix_socket=True)
     patched_getaddrinfo = socket.getaddrinfo
     socket.getaddrinfo = _REAL_GETADDRINFO
     yield
