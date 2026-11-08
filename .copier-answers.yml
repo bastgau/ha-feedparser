@@ -12,4 +12,4 @@ integration_domain: feedparser
 integration_name: Feedparser
 python_requires: '>=3.14.2,<3.15'
 python_version: '3.14'
-repo_name: feedparser
+repo_name: ha-feedparser

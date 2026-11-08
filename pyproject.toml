@@ -1,5 +1,5 @@
 [project]
-name = "feedparser"
+name = "ha-feedparser"
 version = "0.0.0"
 description = "Home Assistant custom integration to parse RSS feeds"
 readme = "README.md"
@@ -20,11 +20,11 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Homepage = "https://github.com/bastgau/feedparser"
-Documentation = "https://github.com/bastgau/feedparser"
-Repository = "https://github.com/bastgau/feedparser"
-"Bug Tracker" = "https://github.com/bastgau/feedparser/issues"
-Changelog = "https://github.com/bastgau/feedparser/releases"
+Homepage = "https://github.com/bastgau/ha-feedparser"
+Documentation = "https://github.com/bastgau/ha-feedparser"
+Repository = "https://github.com/bastgau/ha-feedparser"
+"Bug Tracker" = "https://github.com/bastgau/ha-feedparser/issues"
+Changelog = "https://github.com/bastgau/ha-feedparser/releases"
 
 # Groups rather than one flat list so that CI installs only what each job needs.
 # The ~45 packages `default_config` pulls in for a local `hass` are deliberately

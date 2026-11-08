@@ -16,7 +16,7 @@
   "waitFor": "postCreateCommand",
   "mounts": [
     "type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,readonly",
-    "type=volume,source=claude-config-feedparser,target=/home/vscode/.claude",
+    "type=volume,source=claude-config-ha-feedparser,target=/home/vscode/.claude",
     "type=volume,source=uv-cache,target=/home/vscode/.cache/uv"
   ],
   "runArgs": [
@@ -84,6 +84,6 @@
     }
   },
   "remoteUser": "vscode",
-  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/feedparser,type=bind",
-  "workspaceFolder": "/workspaces/feedparser"
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/ha-feedparser,type=bind",
+  "workspaceFolder": "/workspaces/ha-feedparser"
 }
