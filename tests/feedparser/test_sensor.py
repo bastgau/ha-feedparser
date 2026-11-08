@@ -180,7 +180,7 @@ def test_check_duplicates(feed_sensor: FeedParserSensor) -> None:
 )
 def test_fetch_data_headers_required(
     online_feed: dict,
-    network_enabled: None,  # noqa: ARG001  # pylint: disable=unused-argument
+    network_enabled: None,  # pylint: disable=unused-argument
 ) -> None:
     """Test fetching feed from remote server that requires request with headers."""
     feed_sensor = FeedParserSensor(
@@ -237,7 +237,7 @@ def test_image_not_in_entries(feed: FeedSource) -> None:
     assert all("image" not in e for e in feed_sensor.feed_entries)
 
 
-@pytest.fixture()
+@pytest.fixture
 def sent_user_agents(monkeypatch: pytest.MonkeyPatch) -> list[str | bytes | None]:
     """Record the User-Agent header of every request the sensor sends."""
     sent: list[str | bytes | None] = []
@@ -246,8 +246,8 @@ def sent_user_agents(monkeypatch: pytest.MonkeyPatch) -> list[str | bytes | None
     def spy_get(
         self: requests.Session,
         url: str,
-        *args: Any,  # noqa: ANN401
-        **kwargs: Any,  # noqa: ANN401
+        *args: Any,
+        **kwargs: Any,
     ) -> requests.Response:
         response = original_get(self, url, *args, **kwargs)
         sent.append(response.request.headers.get("User-Agent"))
@@ -321,4 +321,4 @@ def test_process_image_media_content(
     """Test that images are picked from media:content, with or without a type."""
     feed_sensor = FeedParserSensor(**feed.sensor_config_local_feed)
     entry = feedparser.FeedParserDict({"media_content": media_content})
-    assert feed_sensor._process_image(entry) == expected  # noqa: SLF001
+    assert feed_sensor._process_image(entry) == expected
