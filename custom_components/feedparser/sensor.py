@@ -1,22 +1,24 @@
 """Feedparser sensor."""
+
 from __future__ import annotations
 
+from datetime import datetime, timedelta, timezone
 import email.utils
 import logging
 import re
-from datetime import datetime, timedelta, timezone
 from typing import TYPE_CHECKING
 
-import feedparser  # type: ignore[import]
-import homeassistant.helpers.config_validation as cv
-import requests
-import voluptuous as vol
 from dateutil import parser
+import feedparser  # type: ignore[import]
 from feedparser import FeedParserDict
+import requests
+from requests_file import FileAdapter
+import voluptuous as vol
+
 from homeassistant.components.sensor import PLATFORM_SCHEMA, SensorEntity
 from homeassistant.const import CONF_NAME, CONF_SCAN_INTERVAL
+import homeassistant.helpers.config_validation as cv
 from homeassistant.util import dt
-from requests_file import FileAdapter
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
@@ -155,11 +157,7 @@ class FeedParserSensor(SensorEntity):
 
         _LOGGER.debug("Feed %s: Feed data fetched successfully", self.name)
         # set the sensor value to the amount of entries
-        self._attr_native_value = (
-            self._show_topn
-            if len(parsed_feed.entries) > self._show_topn
-            else len(parsed_feed.entries)
-        )
+        self._attr_native_value = min(len(parsed_feed.entries), self._show_topn)
         _LOGGER.debug(
             "Feed %s: %s entries is going to be added to the sensor",
             self.name,
@@ -191,11 +189,7 @@ class FeedParserSensor(SensorEntity):
         _LOGGER.debug("Feed %s: Generating sensor entry for %s", self.name, feed_entry)
         sensor_entry = {}
         for key, value in feed_entry.items():
-            if (
-                (self._inclusions and key not in self._inclusions)
-                or ("parsed" in key)
-                or (key in self._exclusions)
-            ):
+            if (self._inclusions and key not in self._inclusions) or ("parsed" in key) or (key in self._exclusions):
                 continue
             if key in ["published", "updated", "created", "expired"]:
                 parsed_date: datetime = self._parse_date(value)
@@ -242,10 +236,7 @@ class FeedParserSensor(SensorEntity):
             # best effort to parse the date using dateutil
             parsed_time = parser.parse(date)
             if not parsed_time.tzinfo:
-                msg = (
-                    f"Feed {self.name}: Unable to parse date {date}, "
-                    "caused by an incorrect date format"
-                )
+                msg = f"Feed {self.name}: Unable to parse date {date}, caused by an incorrect date format"
                 raise ValueError(msg)
         if not parsed_time.tzname():
             # replace tzinfo with UTC offset if tzinfo does not contain a TZ name
@@ -260,9 +251,7 @@ class FeedParserSensor(SensorEntity):
 
     def _process_image(self: FeedParserSensor, feed_entry: FeedParserDict) -> str:
         if feed_entry.get("enclosures"):
-            images = [
-                enc for enc in feed_entry["enclosures"] if enc.type.startswith("image/")
-            ]
+            images = [enc for enc in feed_entry["enclosures"] if enc.type.startswith("image/")]
             if images:
                 # pick the first image found
                 return images[0]["href"]

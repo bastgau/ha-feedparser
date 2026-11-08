@@ -1,4 +1,5 @@
 """Feed source class to be used in tests."""
+
 from datetime import datetime, timedelta
 from functools import cached_property
 import json
@@ -66,10 +67,7 @@ class FeedSource:
         try:
             return datetime.fromisoformat(self.metadata["download_date"])
         except KeyError as ke:
-            msg = (
-                f"download_date not found in {self.metadata_path}. "
-                "Is feed metadata downloaded?"
-            )
+            msg = f"download_date not found in {self.metadata_path}. Is feed metadata downloaded?"
             raise KeyError(
                 msg,
             ) from ke

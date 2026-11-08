@@ -1,4 +1,4 @@
-""""Tests the feedparser sensor."""
+"""Tests the feedparser sensor."""
 
 from contextlib import nullcontext, suppress
 from datetime import UTC, datetime
@@ -64,13 +64,13 @@ def test_update_sensor(feed: FeedSource) -> None:
     # assert that all entries have non-default image
     if feed.all_entries_have_images and "image" in feed.sensor_config.inclusions:
         if feed.has_images:
-            assert all(
-                e["image"] != DEFAULT_THUMBNAIL for e in feed_sensor.feed_entries
-            ), "Default image found for entry that should have an image"
+            assert all(e["image"] != DEFAULT_THUMBNAIL for e in feed_sensor.feed_entries), (
+                "Default image found for entry that should have an image"
+            )
         else:
-            assert all(
-                e["image"] == DEFAULT_THUMBNAIL for e in feed_sensor.feed_entries
-            ), "Non-default image found for entry that should not have an image"
+            assert all(e["image"] == DEFAULT_THUMBNAIL for e in feed_sensor.feed_entries), (
+                "Non-default image found for entry that should not have an image"
+            )
 
     # assert that all entries have a unique link
     if feed.has_unique_links:
@@ -210,10 +210,7 @@ def test_remove_summary_image(
     assert feed_sensor.feed_entries
 
     # assert that the sensor does not remove the image from the summary
-    assert any(
-        re.search(IMAGE_REGEX, e["summary"]) is not None
-        for e in feed_sensor.feed_entries
-    )
+    assert any(re.search(IMAGE_REGEX, e["summary"]) is not None for e in feed_sensor.feed_entries)
 
     feed_sensor = FeedParserSensor(
         **feed.sensor_config_local_feed | {"remove_summary_image": True},

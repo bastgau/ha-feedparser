@@ -1,4 +1,5 @@
 """Download RSS feeds for testing."""
+
 import asyncio
 import datetime as dt
 import json
