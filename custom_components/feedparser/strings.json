@@ -22,7 +22,7 @@
           "local_time": "Convert the dates of the entries to the time zone of Home Assistant.",
           "scan_interval": "Time between two refreshes of the feed. At least one minute.",
           "show_topn": "Only the most recent entries of the feed are kept.",
-          "remove_summary_image": "Strip the <img> tags from the summary of the entries.",
+          "remove_summary_image": "Strip the img tags from the summary of the entries.",
           "inclusions": "Keep only these fields of each entry. Leave empty to keep all of them. Add `image` to get the URL of the first image.",
           "exclusions": "Remove these fields from each entry.",
           "user_agent": "Value of the User-Agent header sent to the server. Some servers block or stall unknown clients."
@@ -58,7 +58,7 @@
           "local_time": "Convert the dates of the entries to the time zone of Home Assistant.",
           "scan_interval": "Time between two refreshes of the feed. At least one minute.",
           "show_topn": "Only the most recent entries of the feed are kept.",
-          "remove_summary_image": "Strip the <img> tags from the summary of the entries.",
+          "remove_summary_image": "Strip the img tags from the summary of the entries.",
           "inclusions": "Keep only these fields of each entry. Leave empty to keep all of them. Add `image` to get the URL of the first image.",
           "exclusions": "Remove these fields from each entry.",
           "user_agent": "Value of the User-Agent header sent to the server. Some servers block or stall unknown clients."

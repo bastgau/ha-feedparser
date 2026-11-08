@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import timedelta
 import json
 from pathlib import Path
+import re
 from typing import TYPE_CHECKING, Any
 
 from custom_components.feedparser.config_flow import FeedparserConfigFlow
@@ -223,6 +224,22 @@ def test_translations_match_strings() -> None:
     strings = json.loads((COMPONENT_PATH / "strings.json").read_text(encoding="utf-8"))
     english = json.loads((COMPONENT_PATH / "translations" / "en.json").read_text(encoding="utf-8"))
     assert strings == english
+
+
+def _strings_of(value: object) -> list[str]:
+    """Collect every string found in a loaded JSON document."""
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, dict):
+        return [text for item in value.values() for text in _strings_of(item)]
+    return []
+
+
+def test_translations_contain_no_html() -> None:
+    """Test that no translated text contains a tag, which hassfest refuses."""
+    for name in ("strings.json", "translations/en.json"):
+        document = json.loads((COMPONENT_PATH / name).read_text(encoding="utf-8"))
+        assert [text for text in _strings_of(document) if re.search(r"<[^>]*>", text)] == [], name
 
 
 @pytest.mark.parametrize(
