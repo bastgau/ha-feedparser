@@ -1,6 +1,6 @@
 {
-  "domain": "feedparser",
-  "name": "Feedparser",
+  "domain": "rss_feedparser",
+  "name": "RSS Feedparser",
   "codeowners": ["@bastgau"],
   "config_flow": true,
   "dependencies": [],

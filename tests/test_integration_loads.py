@@ -1,4 +1,4 @@
-"""Check that Home Assistant finds the Feedparser integration and imports it.
+"""Check that Home Assistant finds the RSS Feedparser integration and imports it.
 
 A first test to start from, seeded once by the template: the repository owns it, edit it or delete it.
 """
@@ -6,7 +6,7 @@ A first test to start from, seeded once by the template: the repository owns it,
 from homeassistant.core import HomeAssistant
 from homeassistant.loader import async_get_integration
 
-DOMAIN = "feedparser"
+DOMAIN = "rss_feedparser"
 
 
 async def test_integration_loads(hass: HomeAssistant, enable_custom_integrations: None) -> None:

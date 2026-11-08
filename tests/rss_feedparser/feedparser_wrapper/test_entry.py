@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from custom_components.feedparser.feedparser_wrapper import FeedEntry, find_image_url, find_link
+from custom_components.rss_feedparser.feedparser_wrapper import FeedEntry, find_image_url, find_link
 import pytest
 
 

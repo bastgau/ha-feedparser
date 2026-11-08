@@ -8,10 +8,10 @@
 # Measuring it twice would let one job's coverage paper over the other's, which
 # is exactly what splitting them was meant to prevent.
 [run]
-source = custom_components/feedparser
+source = custom_components/rss_feedparser
 branch = True
 omit =
-    custom_components/feedparser/feedparser_wrapper/*
+    custom_components/rss_feedparser/feedparser_wrapper/*
 
 [report]
 exclude_lines =

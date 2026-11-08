@@ -17,7 +17,7 @@ classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.14",
 ]
-# Mirror of "requirements" in custom_components/feedparser/manifest.json, which is what
+# Mirror of "requirements" in custom_components/rss_feedparser/manifest.json, which is what
 # Home Assistant itself installs at runtime. Keep both in sync, with the same specifiers.
 # "requests" is only listed here: Home Assistant provides it, so hassfest forbids it in the
 # manifest, but the bundled client is tested without Home Assistant and needs it.
@@ -76,7 +76,7 @@ default-groups = ["homeassistant", "lint", "test", "test-client"]
 target-version = "py313"
 line-length = 120
 indent-width = 4
-src = ["custom_components/feedparser"]
+src = ["custom_components/rss_feedparser"]
 # Home Assistant test scaffolding some repositories carry in tests/ (absent elsewhere, so harmless).
 exclude = ["tests/testing_config/*", "tests/typing.py"]
 
@@ -193,7 +193,7 @@ asyncio_mode = "auto"
 # `pytest` from VSCode or while iterating on one test is never gated.
 
 [tool.coverage.run]
-source = ["custom_components/feedparser"]
+source = ["custom_components/rss_feedparser"]
 # VSCode's Python Testing extension invokes pytest with its own --cov=.
 # argument, overriding `source` above. `omit` still applies afterwards, so
 # it keeps tests/ out of the coverage report regardless of how pytest-cov
@@ -227,9 +227,9 @@ todo_section = "forbidden"
 blank_lines_before_closing_quotes = 0
 
 [[tool.docstring-linter.overrides]]
-paths = ["custom_components/feedparser/*.py"]
+paths = ["custom_components/rss_feedparser/*.py"]
 summary_max_length = 120
 
 [[tool.docstring-linter.overrides]]
-paths = ["custom_components/feedparser/feedparser_wrapper/*.py", "tests/**/conftest.py"]
+paths = ["custom_components/rss_feedparser/feedparser_wrapper/*.py", "tests/**/conftest.py"]
 summary_max_length = 120

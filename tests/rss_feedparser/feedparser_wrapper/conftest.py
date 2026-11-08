@@ -1,6 +1,6 @@
 """Fixtures for the bundled client's own tests.
 
-These tests cover `custom_components/feedparser/feedparser_wrapper/`, which knows nothing about Home Assistant. This
+These tests cover `custom_components/rss_feedparser/feedparser_wrapper/`, which knows nothing about Home Assistant. This
 file keeps that true at the test level too, so the suite can run in an environment where Home Assistant is not
 installed at all.
 """

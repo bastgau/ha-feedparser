@@ -4,11 +4,11 @@ from collections.abc import Iterator
 from pathlib import Path
 import socket
 
-from custom_components.feedparser.sensor import FeedParserSensor
+from custom_components.rss_feedparser.sensor import FeedParserSensor
 import pytest
 
-from tests.feedparser.constants import TEST_FEEDS
-from tests.feedparser.feedsource import FeedSource
+from tests.rss_feedparser.constants import TEST_FEEDS
+from tests.rss_feedparser.feedsource import FeedSource
 
 # Captured at import time, before the Home Assistant test plugin replaces it for each test.
 _REAL_GETADDRINFO = socket.getaddrinfo

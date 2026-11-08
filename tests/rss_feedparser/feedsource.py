@@ -5,7 +5,7 @@ from functools import cached_property
 import json
 from pathlib import Path
 
-from tests.feedparser.constants import (
+from tests.rss_feedparser.constants import (
     DATA_PATH,
     DATE_FORMAT,
     DEFAULT_EXCLUSIONS,

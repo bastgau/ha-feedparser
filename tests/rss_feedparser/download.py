@@ -6,8 +6,8 @@ import json
 
 import aiohttp
 
-from tests.feedparser.constants import TEST_FEEDS
-from tests.feedparser.feedsource import FeedSource
+from tests.rss_feedparser.constants import TEST_FEEDS
+from tests.rss_feedparser.feedsource import FeedSource
 
 base_date = dt.datetime.now(dt.UTC)
 

@@ -6,7 +6,7 @@ from pathlib import Path
 import re
 from typing import TYPE_CHECKING, Any
 
-from custom_components.feedparser.sensor import (
+from custom_components.rss_feedparser.sensor import (
     CONF_USER_AGENT,
     DEFAULT_SCAN_INTERVAL,
     DEFAULT_THUMBNAIL,
@@ -20,8 +20,8 @@ import pytest
 import requests
 
 from homeassistant.util import dt as dt_util
-from tests.feedparser.constants import DATE_FORMAT, URLS_HEADERS_REQUIRED
-from tests.feedparser.feedsource import FeedSource
+from tests.rss_feedparser.constants import DATE_FORMAT, URLS_HEADERS_REQUIRED
+from tests.rss_feedparser.feedsource import FeedSource
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -321,7 +321,7 @@ def test_custom_user_agent(
 def test_user_agent_config_schema() -> None:
     """Test that user_agent is optional and defaults to the integration's agent."""
     base_config = {
-        "platform": "feedparser",
+        "platform": "rss_feedparser",
         "name": "Test Feed",
         "feed_url": "https://example.com/feed.xml",
     }

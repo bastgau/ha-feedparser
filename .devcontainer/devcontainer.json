@@ -1,5 +1,5 @@
 {
-  "name": "Feedparser",
+  "name": "RSS Feedparser",
   "dockerFile": "./Dockerfile",
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {

@@ -8,8 +8,8 @@ from pathlib import Path
 import re
 from typing import TYPE_CHECKING, Any
 
-from custom_components.feedparser.config_flow import FeedparserConfigFlow
-from custom_components.feedparser.const import (
+from custom_components.rss_feedparser.config_flow import FeedparserConfigFlow
+from custom_components.rss_feedparser.const import (
     CONF_DATE_FORMAT,
     CONF_EXCLUSIONS,
     CONF_FEED_URL,
@@ -32,7 +32,7 @@ from homeassistant.helpers import entity_platform
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
 
-COMPONENT_PATH = Path(__file__).parents[2] / "custom_components" / "feedparser"
+COMPONENT_PATH = Path(__file__).parents[2] / "custom_components" / "rss_feedparser"
 THIRTY_MINUTES = {"hours": 0, "minutes": 30, "seconds": 0}
 
 

@@ -7,7 +7,7 @@ import struct
 
 import pytest
 
-BRAND_PATH = Path(__file__).parents[2] / "custom_components" / "feedparser" / "brand"
+BRAND_PATH = Path(__file__).parents[2] / "custom_components" / "rss_feedparser" / "brand"
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 RGBA_COLOR_TYPE = 6
 

@@ -1,6 +1,6 @@
-INTEGRATION_DOMAIN=feedparser
-INTEGRATION_NAME=Feedparser
+INTEGRATION_DOMAIN=rss_feedparser
+INTEGRATION_NAME=RSS Feedparser
 CLIENT_PACKAGE=feedparser_wrapper
-CLIENT_TESTS_PATH=tests/feedparser/feedparser_wrapper
+CLIENT_TESTS_PATH=tests/rss_feedparser/feedparser_wrapper
 PYTHON_VERSION=3.14
 COVERAGE_FAIL_UNDER=0

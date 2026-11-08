@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import timedelta
 
-DOMAIN = "feedparser"
+DOMAIN = "rss_feedparser"
 
 CONF_FEED_URL = "feed_url"
 CONF_DATE_FORMAT = "date_format"
