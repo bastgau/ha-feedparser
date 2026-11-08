@@ -1069,6 +1069,12 @@ lint = [
 test = [
     { name = "pytest-homeassistant-custom-component" },
 ]
+test-client = [
+    { name = "aiohttp" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "pytest-cov" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -1089,6 +1095,12 @@ lint = [
     { name = "ruff", specifier = "==0.17.0" },
 ]
 test = [{ name = "pytest-homeassistant-custom-component", specifier = "==0.13.372" }]
+test-client = [
+    { name = "aiohttp", specifier = "==3.14.4" },
+    { name = "pytest", specifier = "==9.0.3" },
+    { name = "pytest-asyncio", specifier = "==1.4.0" },
+    { name = "pytest-cov", specifier = "==7.1.0" },
+]
 
 [[package]]
 name = "habluetooth"

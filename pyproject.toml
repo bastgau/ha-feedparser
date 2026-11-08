@@ -54,9 +54,17 @@ lint = [
 ]
 test = ["pytest-homeassistant-custom-component==0.13.372"]
 
+# The bundled client's own tests never start Home Assistant (see scripts/test).
+test-client = [
+  "aiohttp==3.14.4",
+  "pytest==9.0.3",
+  "pytest-asyncio==1.4.0",
+  "pytest-cov==7.1.0",
+]
+
 [tool.uv]
 package = false
-default-groups = ["homeassistant", "lint", "test"]
+default-groups = ["homeassistant", "lint", "test", "test-client"]
 
 [tool.ruff]
 # NOTE: runtime target is Python 3.14, but ruff's target-version is intentionally
@@ -218,4 +226,8 @@ blank_lines_before_closing_quotes = 0
 
 [[tool.docstring-linter.overrides]]
 paths = ["custom_components/feedparser/*.py"]
+summary_max_length = 120
+
+[[tool.docstring-linter.overrides]]
+paths = ["custom_components/feedparser/feedparser_wrapper/*.py", "tests/**/conftest.py"]
 summary_max_length = 120
