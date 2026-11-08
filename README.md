@@ -21,23 +21,23 @@
 3. Restart Home Assistant.
 4. Set up the integration using the UI:
 
-[![Add Integration](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=feedparser)
+[![Add Integration](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=rss_feedparser)
 
 ### Manual Installation
 
 1. Download the integration files from the GitHub repository.
-2. Place the `feedparser` folder in the `custom_components` directory of Home Assistant.
+2. Place the `rss_feedparser` folder in the `custom_components` directory of Home Assistant.
 3. Restart Home Assistant.
 4. Set up the integration using the UI:
 
-[![Add Integration](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=feedparser)
+[![Add Integration](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=rss_feedparser)
 
 ## Configuration
 
 ### UI configuration (recommended)
 
 1. Go to **Settings** → **Devices & services** and click **Add integration**.
-2. Search for **Feedparser**.
+2. Search for **RSS Feedparser**.
 3. Enter a name and the URL of the feed, then adjust the settings if you need to. The feed is fetched once to check that it can be read.
 
 Add the integration once per feed. To change the settings later, open the integration and click **Configure**: saving them reloads that feed.
@@ -48,11 +48,14 @@ The settings are the ones listed in [Configuration variables](#configuration-var
 
 The sensor can still be configured in YAML.
 
+> [!NOTE]
+> Coming from the original integration? This fork has its own name, `rss_feedparser`, so both can be installed side by side. To switch, replace `platform: feedparser` with `platform: rss_feedparser` in your configuration.
+
 **Example configuration.yaml:**
 
 ```yaml
 sensor:
-  - platform: feedparser
+  - platform: rss_feedparser
     name: Engineering Feed
     feed_url: "https://www.sciencedaily.com/rss/matter_energy/engineering.xml"
     date_format: "%a, %d %b %Y %H:%M:%S %Z"
@@ -68,14 +71,14 @@ sensor:
       - language
 
   # Configuration of the second sensor tracking a different RSS feed
-  - platform: feedparser
+  - platform: rss_feedparser
     name: Algemeen
     feed_url: https://www.nu.nl/rss/Algemeen
     local_time: true
     show_topn: 1
 
   # Some servers block or stall unknown clients; send a browser User-Agent instead
-  - platform: feedparser
+  - platform: rss_feedparser
     name: Picky Server Feed
     feed_url: https://example.com/rss
     user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36"
@@ -119,7 +122,7 @@ This project is a fork of [custom-components/feedparser](https://github.com/cust
 
 A big thank you to all of them: the idea, the design and the vast majority of the code are theirs, and this fork would not exist without their work. The original MIT license and its copyright notice are kept unchanged.
 
-This fork is maintained by [bastgau](https://github.com/bastgau). It stays based on the original code and currently adds:
+This fork is maintained by [bastgau](https://github.com/bastgau). It has its own integration name (`rss_feedparser`), so it can run next to the original. It stays based on the original code and currently adds:
 
 - a `user_agent` option, to send a browser User-Agent to servers that block or stall unknown clients (a contribution of [Dave Nicoll](https://github.com/davenicoll));
 - images read from `media:content` elements, which is handy for Mastodon feeds (a contribution of [Piotr Gaczkowski](https://github.com/DoomHammer));
