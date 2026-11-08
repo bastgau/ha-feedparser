@@ -27,7 +27,7 @@ if TYPE_CHECKING:
 
 __version__ = "0.1.11"
 
-COMPONENT_REPO = "https://github.com/custom-components/feedparser/"
+COMPONENT_REPO = "https://github.com/bastgau/ha-feedparser/"
 
 REQUIREMENTS = ["feedparser"]
 
