@@ -91,14 +91,14 @@ async def async_setup_platform(
     )
 
 
-class FeedParserSensor(SensorEntity):
+class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attributes
     """Representation of a Feedparser sensor."""
 
     # force update the entity since the number of feed entries does not necessarily
     # change, but we still want to update the extra_state_attributes
     _attr_force_update = True
 
-    def __init__(
+    def __init__(  # noqa: PLR0913, PLR0917  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self: FeedParserSensor,
         feed: str,
         name: str,
