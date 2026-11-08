@@ -284,3 +284,34 @@ def test_user_agent_config_schema() -> None:
 
     custom_config = base_config | {CONF_USER_AGENT: "Custom/1.0"}
     assert PLATFORM_SCHEMA(custom_config)[CONF_USER_AGENT] == "Custom/1.0"
+
+
+@pytest.mark.parametrize(
+    ("media_content", "expected"),
+    [
+        # image with an explicit type
+        (
+            [{"url": "https://example.com/a.png", "type": "image/png"}],
+            "https://example.com/a.png",
+        ),
+        # non-image media is skipped, the first image wins
+        (
+            [
+                {"url": "https://example.com/a.mp4", "type": "video/mp4"},
+                {"url": "https://example.com/b.jpg", "type": "image/jpeg"},
+            ],
+            "https://example.com/b.jpg",
+        ),
+        # media:content without a "type" attribute must not raise a KeyError
+        ([{"url": "https://example.com/c"}], DEFAULT_THUMBNAIL),
+    ],
+)
+def test_process_image_media_content(
+    feed: FeedSource,
+    media_content: list[dict[str, str]],
+    expected: str,
+) -> None:
+    """Test that images are picked from media:content, with or without a type."""
+    feed_sensor = FeedParserSensor(**feed.sensor_config_local_feed)
+    entry = feedparser.FeedParserDict({"media_content": media_content})
+    assert feed_sensor._process_image(entry) == expected  # noqa: SLF001
