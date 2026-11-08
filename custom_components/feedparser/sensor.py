@@ -6,13 +6,9 @@ from datetime import datetime, timedelta, timezone
 import email.utils
 import logging
 import re
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from dateutil import parser
-import feedparser  # type: ignore[import]
-from feedparser import FeedParserDict
-import requests
-from requests_file import FileAdapter
 import voluptuous as vol
 
 from homeassistant.components.sensor import PLATFORM_SCHEMA, SensorEntity
@@ -20,10 +16,14 @@ from homeassistant.const import CONF_NAME, CONF_SCAN_INTERVAL
 import homeassistant.helpers.config_validation as cv
 from homeassistant.util import dt
 
+from .feedparser_wrapper import IMAGE_REGEX, FeedClient, find_image_url, find_link
+
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
     from homeassistant.helpers.entity_platform import AddEntitiesCallback
     from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
+
+    from .feedparser_wrapper import FeedEntry, ParsedFeed
 
 __version__ = "0.1.11"
 
@@ -45,9 +45,8 @@ DEFAULT_SCAN_INTERVAL = timedelta(hours=1)
 DEFAULT_THUMBNAIL = "https://www.home-assistant.io/images/favicon-192x192-full.png"
 DEFAULT_TOPN = 9999
 USER_AGENT = f"Home Assistant Feed-parser Integration {__version__}"
-IMAGE_REGEX = r"<img.+?src=\"(.+?)\".+?>"
 
-PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
+PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(  # pyright: ignore[reportConstantRedefinition]
     {
         vol.Required(CONF_NAME): cv.string,
         vol.Required(CONF_FEED_URL): cv.string,
@@ -123,7 +122,7 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
         self._scan_interval = scan_interval
         self._local_time = local_time
         self._user_agent = user_agent
-        self._entries: list[dict[str, str]] = []
+        self._entries: list[dict[str, Any]] = []
         self._attr_extra_state_attributes = {"entries": self._entries}
         self._attr_attribution = "Data retrieved using RSS feedparser"
         _LOGGER.debug("Feed %s: FeedParserSensor initialized - %s", self.name, self)
@@ -143,12 +142,7 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
     def update(self: FeedParserSensor) -> None:
         """Parse the feed and update the state of the sensor."""
         _LOGGER.debug("Feed %s: Polling feed data from %s", self.name, self._feed)
-        s: requests.Session = requests.Session()
-        s.mount("file://", FileAdapter())
-        s.headers.update({"User-Agent": self._user_agent})
-        res: requests.Response = s.get(self._feed)
-        res.raise_for_status()
-        parsed_feed: FeedParserDict = feedparser.parse(res.text)
+        parsed_feed = FeedClient(self._user_agent).fetch(self._feed)
 
         if not parsed_feed.entries:
             self._attr_native_value = None
@@ -173,21 +167,16 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
 
     def _generate_entries(
         self: FeedParserSensor,
-        parsed_feed: FeedParserDict,
-    ) -> list[dict[str, str]]:
-        return [
-            self._generate_sensor_entry(feed_entry)
-            for feed_entry in parsed_feed.entries[
-                : self.native_value  # type: ignore[misc]
-            ]
-        ]
+        parsed_feed: ParsedFeed,
+    ) -> list[dict[str, Any]]:
+        return [self._generate_sensor_entry(feed_entry) for feed_entry in parsed_feed.entries[: self._show_topn]]
 
     def _generate_sensor_entry(
         self: FeedParserSensor,
-        feed_entry: FeedParserDict,
-    ) -> dict[str, str]:
+        feed_entry: FeedEntry,
+    ) -> dict[str, Any]:
         _LOGGER.debug("Feed %s: Generating sensor entry for %s", self.name, feed_entry)
-        sensor_entry = {}
+        sensor_entry: dict[str, Any] = {}
         for key, value in feed_entry.items():
             if (self._inclusions and key not in self._inclusions) or ("parsed" in key) or (key in self._exclusions):
                 continue
@@ -249,51 +238,29 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
         _LOGGER.debug("Feed %s: Parsed date: %s", self.name, parsed_time)
         return parsed_time
 
-    def _process_image(self: FeedParserSensor, feed_entry: FeedParserDict) -> str:
-        if feed_entry.get("enclosures"):
-            images = [enc for enc in feed_entry["enclosures"] if enc.type.startswith("image/")]
-            if images:
-                # pick the first image found
-                return images[0]["href"]
-        if feed_entry.get("media_content"):
-            # "type" is optional in media:content, so don't assume it is present
-            images = [
-                enc
-                for enc in feed_entry["media_content"]
-                if enc.get("type", "").startswith("image/") and enc.get("url")
-            ]
-            if images:
-                # pick the first image found
-                return images[0]["url"]
-        if "summary" in feed_entry:
-            images = re.findall(
-                IMAGE_REGEX,
-                feed_entry["summary"],
+    def _process_image(self: FeedParserSensor, feed_entry: FeedEntry) -> str:
+        image_url = find_image_url(feed_entry)
+        if image_url is None:
+            _LOGGER.debug(
+                "Feed %s: Image is in inclusions, but no image was found for %s",
+                self.name,
+                feed_entry,
             )
-            if images:
-                # pick the first image found
-                return images[0]
-        _LOGGER.debug(
-            "Feed %s: Image is in inclusions, but no image was found for %s",
-            self.name,
-            feed_entry,
-        )
-        return DEFAULT_THUMBNAIL  # use default image if no image found
+            return DEFAULT_THUMBNAIL  # use default image if no image found
+        return image_url
 
-    def _process_link(self: FeedParserSensor, feed_entry: FeedParserDict) -> str:
+    def _process_link(self: FeedParserSensor, feed_entry: FeedEntry) -> str:
         """Return link from feed entry."""
-        if "links" in feed_entry:
-            if len(feed_entry["links"]) > 1:
-                _LOGGER.debug(
-                    "Feed %s: More than one link found for %s. Using the first link.",
-                    self.name,
-                    feed_entry,
-                )
-            return feed_entry["links"][0]["href"]
-        return ""
+        if len(feed_entry.get("links", ())) > 1:
+            _LOGGER.debug(
+                "Feed %s: More than one link found for %s. Using the first link.",
+                self.name,
+                feed_entry,
+            )
+        return find_link(feed_entry)
 
     @property
-    def feed_entries(self: FeedParserSensor) -> list[dict[str, str]]:
+    def feed_entries(self: FeedParserSensor) -> list[dict[str, Any]]:
         """Return feed entries."""
         if hasattr(self, "_entries"):
             return self._entries
@@ -310,6 +277,8 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
         self._local_time = value
 
     @property
-    def extra_state_attributes(self: FeedParserSensor) -> dict[str, list]:
+    def extra_state_attributes(  # pyright: ignore[reportIncompatibleVariableOverride]
+        self: FeedParserSensor,
+    ) -> dict[str, list[dict[str, Any]]]:
         """Return entity specific state attributes."""
         return {"entries": self.feed_entries}
