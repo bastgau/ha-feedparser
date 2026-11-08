@@ -19,8 +19,10 @@ classifiers = [
 ]
 # Mirror of "requirements" in custom_components/feedparser/manifest.json, which is what
 # Home Assistant itself installs at runtime. Keep both in sync, with the same specifiers.
+# "requests" is only listed here: Home Assistant provides it, so hassfest forbids it in the
+# manifest, but the bundled client is tested without Home Assistant and needs it.
 dependencies = [
-  "feedparser==6.0.11",
+  "feedparser==6.0.12",
   "python-dateutil",
   "requests-file",
   "requests",
