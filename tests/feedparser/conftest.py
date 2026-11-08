@@ -1,10 +1,30 @@
 """Pytest configuration."""
 
+from collections.abc import Iterator
+import socket
+
 from custom_components.feedparser.sensor import FeedParserSensor
 import pytest
 
 from tests.feedparser.constants import TEST_FEEDS
 from tests.feedparser.feedsource import FeedSource
+
+# Captured at import time, before the Home Assistant test plugin replaces it for each test.
+_REAL_GETADDRINFO = socket.getaddrinfo
+
+
+@pytest.fixture
+def network_enabled(socket_enabled: None) -> Iterator[None]:  # pylint: disable=unused-argument
+    """Allow a test to reach real remote servers.
+
+    The Home Assistant test plugin blocks sockets and replaces DNS resolution with a
+    function that rejects every host name. `socket_enabled` lifts the first restriction,
+    this fixture restores the real resolver for the duration of the test.
+    """
+    patched_getaddrinfo = socket.getaddrinfo
+    socket.getaddrinfo = _REAL_GETADDRINFO
+    yield
+    socket.getaddrinfo = patched_getaddrinfo
 
 
 def get_feeds() -> list[FeedSource]:

@@ -178,7 +178,10 @@ def test_check_duplicates(feed_sensor: FeedParserSensor) -> None:
     URLS_HEADERS_REQUIRED,
     ids=lambda feed_url: feed_url["name"],
 )
-def test_fetch_data_headers_required(online_feed: dict) -> None:
+def test_fetch_data_headers_required(
+    online_feed: dict,
+    network_enabled: None,  # noqa: ARG001  # pylint: disable=unused-argument
+) -> None:
     """Test fetching feed from remote server that requires request with headers."""
     feed_sensor = FeedParserSensor(
         feed=online_feed["url"],
