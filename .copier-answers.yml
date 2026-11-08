@@ -7,7 +7,8 @@ client_package: feedparser_wrapper
 client_tests_path: tests/feedparser/feedparser_wrapper
 copyright_year: 2018
 coverage_fail_under: 0
-description: Home Assistant custom integration to parse RSS feeds
+description: 📰 The Feedparser integration for Home Assistant turns RSS and Atom feeds
+    into sensors, directly from Home Assistant.
 github_owner: bastgau
 integration_domain: feedparser
 integration_name: Feedparser

@@ -1,6 +1,6 @@
 # ha-feedparser
 
-RSS feed custom component for [Home Assistant](https://www.home-assistant.io/).
+📰 The Feedparser integration for [Home Assistant](https://www.home-assistant.io/) turns RSS and Atom feeds into sensors, directly from Home Assistant.
 
 [![Maintainer: bastgau](https://img.shields.io/badge/maintainer-bastgau-orange?logo=github&logoColor=%23959da5&labelColor=%232d333a)](https://github.com/bastgau)
 [![Made with Python](https://img.shields.io/badge/Made_with-Python-blue?style=flat&logo=python&logoColor=%23959da5&labelColor=%232d333a)](https://www.python.org/)

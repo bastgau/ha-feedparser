@@ -1,7 +1,7 @@
 [project]
 name = "ha-feedparser"
 version = "0.0.0"
-description = "Home Assistant custom integration to parse RSS feeds"
+description = "📰 The Feedparser integration for Home Assistant turns RSS and Atom feeds into sensors, directly from Home Assistant."
 readme = "README.md"
 license = "MIT"
 # One minor only (devcontainer, CI and Home Assistant all target it); the floor
