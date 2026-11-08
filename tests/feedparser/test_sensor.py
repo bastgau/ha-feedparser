@@ -256,7 +256,7 @@ def sent_user_agents(monkeypatch: pytest.MonkeyPatch) -> list[str | bytes | None
 
 def test_default_user_agent(
     feed: FeedSource,
-    sent_user_agents: list[str | bytes | None],
+    sent_user_agents: list[str | bytes | None],  # pylint: disable=redefined-outer-name
 ) -> None:
     """Test that the integration's User-Agent is sent when none is configured."""
     feed_sensor = FeedParserSensor(**feed.sensor_config_local_feed)
@@ -266,7 +266,7 @@ def test_default_user_agent(
 
 def test_custom_user_agent(
     feed: FeedSource,
-    sent_user_agents: list[str | bytes | None],
+    sent_user_agents: list[str | bytes | None],  # pylint: disable=redefined-outer-name
 ) -> None:
     """Test that a configured User-Agent replaces the default one."""
     custom_user_agent = "Mozilla/5.0 (compatible; FeedTest/1.0)"
@@ -318,4 +318,4 @@ def test_process_image_media_content(
     """Test that images are picked from media:content, with or without a type."""
     feed_sensor = FeedParserSensor(**feed.sensor_config_local_feed)
     entry = feedparser.FeedParserDict({"media_content": media_content})
-    assert feed_sensor._process_image(entry) == expected
+    assert feed_sensor._process_image(entry) == expected  # pylint: disable=protected-access

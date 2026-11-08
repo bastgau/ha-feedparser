@@ -60,7 +60,7 @@ def feed(request: pytest.FixtureRequest) -> FeedSource:
 
 
 @pytest.fixture
-def feed_sensor(feed: FeedSource) -> FeedParserSensor:
+def feed_sensor(feed: FeedSource) -> FeedParserSensor:  # pylint: disable=redefined-outer-name
     """Return feed sensor initialized with the local RSS feed."""
     return FeedParserSensor(**feed.sensor_config_local_feed)
 
