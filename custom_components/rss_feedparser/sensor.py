@@ -164,6 +164,7 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
 
     Attributes:
         _attr_force_update (bool): Update the entity even when the number of entries did not change.
+        _unrecorded_attributes (frozenset[str]): The state attributes excluded from the recorder.
         _feed (str): URL of the feed.
         _attr_name (str): Name of the sensor.
         _attr_unique_id (str | None): Unique id of the entity, set for sensors created from a config entry.
@@ -184,6 +185,12 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
     # force update the entity since the number of feed entries does not necessarily
     # change, but we still want to update the extra_state_attributes
     _attr_force_update = True
+
+    # The entries of a feed are large and change with the feed. The recorder refuses to store attributes of
+    # more than 16 KB (it logs a warning and keeps none), and this entity writes its state on every refresh.
+    # Keeping them out of the recorder avoids that: they remain available live, for templates, automations
+    # and cards.
+    _unrecorded_attributes = frozenset({"entries"})
 
     def __init__(  # noqa: PLR0913, PLR0917  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self: FeedParserSensor,

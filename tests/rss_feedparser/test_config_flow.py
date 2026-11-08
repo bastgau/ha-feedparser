@@ -182,6 +182,18 @@ async def test_entry_can_be_unloaded(hass: HomeAssistant, local_feed_url: str) -
     assert state.state == "unavailable"
 
 
+async def test_entries_attribute_is_kept_out_of_the_recorder(hass: HomeAssistant, local_feed_url: str) -> None:
+    """Test that the entries stay available live but are excluded from the recorder, which drops large attributes."""
+    await _add_entry(hass, local_feed_url)
+
+    state = hass.states.get("sensor.test_feed")
+
+    assert state is not None
+    assert [entry["title"] for entry in state.attributes["entries"]] == ["First"]
+    assert state.state_info is not None
+    assert "entries" in state.state_info["unrecorded_attributes"]
+
+
 async def test_options_flow_updates_the_entry_and_reloads_it(hass: HomeAssistant, local_feed_url: str) -> None:
     """Test that saved options are stored and applied by reloading the entry."""
     entry = await _add_entry(hass, local_feed_url)
