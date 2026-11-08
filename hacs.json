@@ -1,5 +1,8 @@
 {
-  "name": "Feedparser",
+  "name": "RSS Feedparser",
+  "filename": "rss_feedparser.zip",
+  "hide_default_branch": true,
   "homeassistant": "2026.10.0",
+  "zip_release": true,
   "render_readme": true
 }

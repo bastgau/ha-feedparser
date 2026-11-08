@@ -29,6 +29,14 @@ def test_the_domain_is_the_same_everywhere() -> None:
     assert project_variables["CLIENT_TESTS_PATH"].startswith(f"tests/{MANIFEST['domain']}/")
 
 
+def test_hacs_installs_the_zip_published_by_the_release_workflow() -> None:
+    """Test that hacs.json names the archive that the release workflow builds, called after the domain."""
+    hacs = json.loads((ROOT / "hacs.json").read_text(encoding="utf-8"))
+
+    assert hacs["zip_release"] is True
+    assert hacs["filename"] == f"{MANIFEST['domain']}.zip"
+
+
 def test_manifest_does_not_list_requests() -> None:
     """Test that the manifest leaves out requests: Home Assistant provides it and hassfest refuses it."""
     assert not [requirement for requirement in MANIFEST["requirements"] if requirement.split("=")[0] == "requests"]
