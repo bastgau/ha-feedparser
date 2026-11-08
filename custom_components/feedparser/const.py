@@ -6,8 +6,6 @@ from datetime import timedelta
 
 DOMAIN = "feedparser"
 
-__version__ = "0.1.11"
-
 CONF_FEED_URL = "feed_url"
 CONF_DATE_FORMAT = "date_format"
 CONF_LOCAL_TIME = "local_time"
@@ -23,7 +21,7 @@ DEFAULT_REMOVE_SUMMARY_IMG = False
 DEFAULT_SCAN_INTERVAL = timedelta(hours=1)
 DEFAULT_THUMBNAIL = "https://www.home-assistant.io/images/favicon-192x192-full.png"
 DEFAULT_TOPN = 9999
-USER_AGENT = f"Home Assistant Feed-parser Integration {__version__}"
+USER_AGENT = "Home Assistant Feed-parser Integration"
 
 # Schemes accepted for a feed URL: file is what the tests and local feeds use.
 SUPPORTED_URL_SCHEMES = ("http", "https", "file")
