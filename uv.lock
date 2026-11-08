@@ -1078,7 +1078,7 @@ test-client = [
 
 [package.metadata]
 requires-dist = [
-    { name = "feedparser", specifier = "==6.0.12" },
+    { name = "feedparser", specifier = ">=6.0.12" },
     { name = "python-dateutil" },
     { name = "requests" },
     { name = "requests-file" },

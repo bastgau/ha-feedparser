@@ -8,6 +8,6 @@
   "integration_type": "service",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/bastgau/ha-feedparser/issues",
-  "requirements": ["feedparser==6.0.12", "python-dateutil", "requests-file"],
+  "requirements": ["feedparser>=6.0.12", "python-dateutil", "requests-file"],
   "version": "0.0.0"
 }

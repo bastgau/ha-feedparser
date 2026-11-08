@@ -22,7 +22,7 @@ classifiers = [
 # "requests" is only listed here: Home Assistant provides it, so hassfest forbids it in the
 # manifest, but the bundled client is tested without Home Assistant and needs it.
 dependencies = [
-  "feedparser==6.0.12",
+  "feedparser>=6.0.12",
   "python-dateutil",
   "requests-file",
   "requests",
