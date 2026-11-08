@@ -16,6 +16,23 @@ from homeassistant.const import CONF_NAME, CONF_SCAN_INTERVAL
 import homeassistant.helpers.config_validation as cv
 from homeassistant.util import dt
 
+from .const import (
+    CONF_DATE_FORMAT,
+    CONF_EXCLUSIONS,
+    CONF_FEED_URL,
+    CONF_INCLUSIONS,
+    CONF_LOCAL_TIME,
+    CONF_REMOVE_SUMMARY_IMG,
+    CONF_SHOW_TOPN,
+    CONF_USER_AGENT,
+    DEFAULT_DATE_FORMAT,
+    DEFAULT_LOCAL_TIME,
+    DEFAULT_REMOVE_SUMMARY_IMG,
+    DEFAULT_SCAN_INTERVAL,
+    DEFAULT_THUMBNAIL,
+    DEFAULT_TOPN,
+    USER_AGENT,
+)
 from .feedparser_wrapper import IMAGE_REGEX, FeedClient, find_image_url, find_link
 
 if TYPE_CHECKING:
@@ -25,35 +42,18 @@ if TYPE_CHECKING:
 
     from .feedparser_wrapper import FeedEntry, ParsedFeed
 
-__version__ = "0.1.11"
-
 COMPONENT_REPO = "https://github.com/bastgau/ha-feedparser/"
 
 REQUIREMENTS = ["feedparser"]
-
-CONF_FEED_URL = "feed_url"
-CONF_DATE_FORMAT = "date_format"
-CONF_LOCAL_TIME = "local_time"
-CONF_INCLUSIONS = "inclusions"
-CONF_EXCLUSIONS = "exclusions"
-CONF_SHOW_TOPN = "show_topn"
-CONF_REMOVE_SUMMARY_IMG = "remove_summary_image"
-CONF_USER_AGENT = "user_agent"
-
-DEFAULT_DATE_FORMAT = "%a, %b %d %I:%M %p"
-DEFAULT_SCAN_INTERVAL = timedelta(hours=1)
-DEFAULT_THUMBNAIL = "https://www.home-assistant.io/images/favicon-192x192-full.png"
-DEFAULT_TOPN = 9999
-USER_AGENT = f"Home Assistant Feed-parser Integration {__version__}"
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(  # pyright: ignore[reportConstantRedefinition]
     {
         vol.Required(CONF_NAME): cv.string,
         vol.Required(CONF_FEED_URL): cv.string,
         vol.Required(CONF_DATE_FORMAT, default=DEFAULT_DATE_FORMAT): cv.string,
-        vol.Optional(CONF_LOCAL_TIME, default=False): cv.boolean,
+        vol.Optional(CONF_LOCAL_TIME, default=DEFAULT_LOCAL_TIME): cv.boolean,
         vol.Optional(CONF_SHOW_TOPN, default=DEFAULT_TOPN): cv.positive_int,
-        vol.Optional(CONF_REMOVE_SUMMARY_IMG, default=False): cv.boolean,
+        vol.Optional(CONF_REMOVE_SUMMARY_IMG, default=DEFAULT_REMOVE_SUMMARY_IMG): cv.boolean,
         vol.Optional(CONF_INCLUSIONS, default=[]): vol.All(cv.ensure_list, [cv.string]),
         vol.Optional(CONF_EXCLUSIONS, default=[]): vol.All(cv.ensure_list, [cv.string]),
         vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): cv.time_period,
