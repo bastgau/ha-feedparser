@@ -1,13 +1,13 @@
 # ha-feedparser
 
-📰 The Feedparser integration for [Home Assistant](https://www.home-assistant.io/) turns RSS and Atom feeds into sensors, directly from Home Assistant.
-
 [![Maintainer: bastgau](https://img.shields.io/badge/maintainer-bastgau-orange?logo=github&logoColor=%23959da5&labelColor=%232d333a)](https://github.com/bastgau)
 [![Made with Python](https://img.shields.io/badge/Made_with-Python-blue?style=flat&logo=python&logoColor=%23959da5&labelColor=%232d333a)](https://www.python.org/)
 [![Made for Home Assistant](https://img.shields.io/badge/Made_for-Homeassistant-blue?style=flat&logo=homeassistant&logoColor=%23959da5&labelColor=%232d333a)](https://www.home-assistant.io/)
 [![GitHub Release](https://img.shields.io/github/v/release/bastgau/ha-feedparser?logo=github&logoColor=%23959da5&labelColor=%232d333a&color=%230e80c0)](https://github.com/bastgau/ha-feedparser/releases)
 [![HACS validation](https://github.com/bastgau/ha-feedparser/actions/workflows/validate-for-hacs.yml/badge.svg)](https://github.com/bastgau/ha-feedparser/actions/workflows/validate-for-hacs.yml)
 [![HASSFEST validation](https://github.com/bastgau/ha-feedparser/actions/workflows/validate-with-hassfest.yml/badge.svg)](https://github.com/bastgau/ha-feedparser/actions/workflows/validate-with-hassfest.yml)
+
+📰 The Feedparser integration for [Home Assistant](https://www.home-assistant.io/) turns RSS and Atom feeds into sensors, directly from Home Assistant.
 
 ## Installation
 
