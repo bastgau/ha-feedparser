@@ -115,7 +115,6 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
         _local_time (bool): Whether the dates of the entries are converted to the local time zone.
         _user_agent (str): Value of the User-Agent header sent when fetching the feed.
         _entries (list[dict[str, Any]]): Entries of the feed, as exposed by the sensor.
-        _attr_extra_state_attributes (dict[str, list[dict[str, Any]]]): State attributes of the sensor.
         _attr_attribution (str): Attribution shown for the data of the sensor.
 
     """
@@ -164,7 +163,6 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
         self._local_time = local_time
         self._user_agent = user_agent
         self._entries: list[dict[str, Any]] = []
-        self._attr_extra_state_attributes = {"entries": self._entries}
         self._attr_attribution = "Data retrieved using RSS feedparser"
         _LOGGER.debug("Feed %s: FeedParserSensor initialized - %s", self.name, self)
 
@@ -203,8 +201,10 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
             self.name,
             self.native_value,
         )
-        self._entries.clear()  # clear the entries to avoid duplicates
-        self._entries.extend(self._generate_entries(parsed_feed))
+        # Replace the list instead of mutating it: Home Assistant keeps references to the nested attribute
+        # values of previous states, so an in-place update would also change the previous state and hide
+        # the change from state triggers watching the "entries" attribute.
+        self._entries = self._generate_entries(parsed_feed)
         _LOGGER.debug(
             "Feed %s: Sensor state updated - %s entries",
             self.name,

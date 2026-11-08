@@ -2,6 +2,7 @@
 
 from contextlib import nullcontext, suppress
 from datetime import UTC, datetime
+from pathlib import Path
 import re
 from typing import TYPE_CHECKING, Any
 
@@ -161,6 +162,46 @@ def test_update_sensor_entries_time(
     # assert that the time of the first entry in the sensor is equal to
     # the time of the first entry in the feed
     assert first_entry_time == first_sensor_entry_time
+
+
+def test_update_preserves_previous_attribute_snapshot(tmp_path: Path) -> None:
+    """Test that a new poll does not change the entries returned by the previous one."""
+    feed_path = tmp_path / "snapshot.xml"
+
+    def write_feed(title: str) -> None:
+        feed_path.write_text(
+            f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel>
+  <title>Snapshot test</title><link>https://example.com</link><description>Snapshot test</description>
+  <item><title>{title}</title><link>https://example.com/item</link></item>
+</channel></rss>
+""",
+            encoding="utf-8",
+        )
+
+    feed_sensor = FeedParserSensor(
+        feed=feed_path.as_uri(),
+        name="snapshot",
+        date_format=DATE_FORMAT,
+        local_time=False,
+        show_topn=1,
+        remove_summary_image=False,
+        inclusions=["title", "link"],
+        exclusions=[],
+        scan_interval=DEFAULT_SCAN_INTERVAL,
+    )
+
+    write_feed("Old title")
+    feed_sensor.update()
+    old_entries = feed_sensor.extra_state_attributes["entries"]
+
+    write_feed("New title")
+    feed_sensor.update()
+    new_entries = feed_sensor.extra_state_attributes["entries"]
+
+    assert old_entries is not new_entries
+    assert old_entries[0]["title"] == "Old title"
+    assert new_entries[0]["title"] == "New title"
 
 
 def test_check_duplicates(feed_sensor: FeedParserSensor) -> None:
