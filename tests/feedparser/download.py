@@ -1,6 +1,6 @@
 """Download RSS feeds for testing."""
 import asyncio
-import datetime
+import datetime as dt
 import json
 
 import aiohttp
@@ -8,7 +8,7 @@ import aiohttp
 from tests.feedparser.constants import TEST_FEEDS
 from tests.feedparser.feedsource import FeedSource
 
-base_date = datetime.datetime.now(datetime.UTC)
+base_date = dt.datetime.now(dt.UTC)
 
 
 async def run_feed(feed: FeedSource) -> None:

@@ -189,11 +189,8 @@ class FeedConfig:
     @property
     def scan_interval_timedelta(self: "FeedConfig") -> timedelta:
         """Return scan_interval as timedelta."""
-        if scan_interval := self.raw.get("scan_interval"):
-            td = timedelta(**scan_interval)
-        else:
-            td = timedelta(hours=1)
-        return td
+        scan_interval = self.raw.get("scan_interval")
+        return timedelta(**scan_interval) if scan_interval else timedelta(hours=1)
 
     @property
     def inclusions(self: "FeedConfig") -> list:
