@@ -39,16 +39,34 @@ If you encounter any issues or wish to contribute to improving this integration,
 
 2. Use HACS to install the integration.
 3. Restart Home Assistant.
-4. Set up the integration by adding a `sensor` entry to your `configuration.yaml`, as described in [Configuration](#configuration), then restart Home Assistant.
+4. Set up the integration using the UI:
+
+[![Add Integration](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=feedparser)
 
 ### Manual Installation
 
 1. Download the integration files from the GitHub repository.
 2. Place the `feedparser` folder in the `custom_components` directory of Home Assistant.
 3. Restart Home Assistant.
-4. Set up the integration by adding a `sensor` entry to your `configuration.yaml`, as described in [Configuration](#configuration), then restart Home Assistant.
+4. Set up the integration using the UI:
+
+[![Add Integration](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=feedparser)
 
 ## Configuration
+
+### UI configuration (recommended)
+
+1. Go to **Settings** → **Devices & services** and click **Add integration**.
+2. Search for **Feedparser**.
+3. Enter a name and the URL of the feed, then adjust the settings if you need to. The feed is fetched once to check that it can be read.
+
+Add the integration once per feed. To change the settings later, open the integration and click **Configure**: saving them reloads that feed.
+
+The settings are the ones listed in [Configuration variables](#configuration-variables). In the UI, `inclusions` and `exclusions` are lists of fields, and the refresh interval is set with a duration (at least one minute).
+
+### YAML configuration
+
+The sensor can still be configured in YAML.
 
 **Example configuration.yaml:**
 
@@ -88,7 +106,7 @@ The integration tries to get the link to an image for the given feed item and st
 
 Note that the original `pubDate` field is available under `published` attribute for the given feed entry. Other date-type values that can be available are `updated`, `created` and `expired`. Please refer to [the documentation of the original feedparser](https://feedparser.readthedocs.io/en/latest/date-parsing.html) library.
 
-**Configuration variables:**
+### Configuration variables
 
 | key                          | description                                                                                                  |
 | :--------------------------- | :----------------------------------------------------------------------------------------------------------- |
