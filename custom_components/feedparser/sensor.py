@@ -70,7 +70,15 @@ async def async_setup_platform(
     async_add_devices: AddEntitiesCallback,
     discovery_info: DiscoveryInfoType | None = None,  # noqa: ARG001
 ) -> None:
-    """Set up the Feedparser sensor."""
+    """Set up the Feedparser sensor.
+
+    Args:
+        hass (HomeAssistant): Home Assistant instance, unused.
+        config (ConfigType): Validated platform configuration of the sensor.
+        async_add_devices (AddEntitiesCallback): Callback registering the entities of the platform.
+        discovery_info (DiscoveryInfoType | None): Discovery data, unused.
+
+    """
     async_add_devices(
         [
             FeedParserSensor(
@@ -91,7 +99,26 @@ async def async_setup_platform(
 
 
 class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attributes
-    """Representation of a Feedparser sensor."""
+    """Representation of a Feedparser sensor.
+
+    Attributes:
+        _attr_force_update (bool): Update the entity even when the number of entries did not change.
+        _feed (str): URL of the feed.
+        _attr_name (str): Name of the sensor.
+        _attr_icon (str): Icon of the sensor.
+        _date_format (str): strftime format of the dates of the entries.
+        _show_topn (int): Maximum number of entries kept.
+        _remove_summary_image (bool): Whether to strip the <img> tags from the summary of the entries.
+        _inclusions (list[str | None]): Fields kept in the entries, all of them when empty.
+        _exclusions (list[str | None]): Fields removed from the entries.
+        _scan_interval (timedelta): Time between two updates of the feed.
+        _local_time (bool): Whether the dates of the entries are converted to the local time zone.
+        _user_agent (str): Value of the User-Agent header sent when fetching the feed.
+        _entries (list[dict[str, Any]]): Entries of the feed, as exposed by the sensor.
+        _attr_extra_state_attributes (dict[str, list[dict[str, Any]]]): State attributes of the sensor.
+        _attr_attribution (str): Attribution shown for the data of the sensor.
+
+    """
 
     # force update the entity since the number of feed entries does not necessarily
     # change, but we still want to update the extra_state_attributes
@@ -110,7 +137,21 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
         local_time: bool,
         user_agent: str = USER_AGENT,
     ) -> None:
-        """Initialize the Feedparser sensor."""
+        """Initialize the Feedparser sensor.
+
+        Args:
+            feed (str): URL of the feed (http, https or file).
+            name (str): Name of the sensor.
+            date_format (str): strftime format of the dates of the entries.
+            show_topn (int): Maximum number of entries kept.
+            remove_summary_image (bool): Whether to strip the <img> tags from the summary of the entries.
+            exclusions (list[str | None]): Fields removed from the entries.
+            inclusions (list[str | None]): Fields kept in the entries, all of them when empty.
+            scan_interval (timedelta): Time between two updates of the feed.
+            local_time (bool): Whether to convert the dates of the entries to the local time zone.
+            user_agent (str): Value of the User-Agent header sent when fetching the feed.
+
+        """
         self._feed = feed
         self._attr_name = name
         self._attr_icon = "mdi:rss"
@@ -128,7 +169,12 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
         _LOGGER.debug("Feed %s: FeedParserSensor initialized - %s", self.name, self)
 
     def __repr__(self: FeedParserSensor) -> str:
-        """Return the representation."""
+        """Return the representation.
+
+        Returns:
+            str: The name, feed URL and options of the sensor.
+
+        """
         return (
             f'FeedParserSensor(name="{self.name}", feed="{self._feed}", '
             f"show_topn={self._show_topn}, "
@@ -169,12 +215,30 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
         self: FeedParserSensor,
         parsed_feed: ParsedFeed,
     ) -> list[dict[str, Any]]:
+        """Build the entries of the sensor from a parsed feed.
+
+        Args:
+            parsed_feed (ParsedFeed): The parsed feed.
+
+        Returns:
+            list[dict[str, Any]]: The first show_topn entries of the feed, as exposed by the sensor.
+
+        """
         return [self._generate_sensor_entry(feed_entry) for feed_entry in parsed_feed.entries[: self._show_topn]]
 
     def _generate_sensor_entry(
         self: FeedParserSensor,
         feed_entry: FeedEntry,
     ) -> dict[str, Any]:
+        """Build one entry of the sensor from an entry of the feed.
+
+        Args:
+            feed_entry (FeedEntry): Entry of the parsed feed.
+
+        Returns:
+            dict[str, Any]: The entry as exposed by the sensor, after inclusions, exclusions and conversions.
+
+        """
         _LOGGER.debug("Feed %s: Generating sensor entry for %s", self.name, feed_entry)
         sensor_entry: dict[str, Any] = {}
         for key, value in feed_entry.items():
@@ -206,6 +270,18 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
         return sensor_entry
 
     def _parse_date(self: FeedParserSensor, date: str) -> datetime:
+        """Parse a date of the feed.
+
+        Args:
+            date (str): Date as written in the feed.
+
+        Returns:
+            datetime: The date with a time zone, converted to the local time zone when local_time is set.
+
+        Raises:
+            ValueError: The date has no time zone and cannot be parsed.
+
+        """
         try:
             parsed_time: datetime = email.utils.parsedate_to_datetime(date)
         except ValueError:
@@ -239,6 +315,15 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
         return parsed_time
 
     def _process_image(self: FeedParserSensor, feed_entry: FeedEntry) -> str:
+        """Return the image of a feed entry.
+
+        Args:
+            feed_entry (FeedEntry): Entry of the parsed feed.
+
+        Returns:
+            str: URL of the first image of the entry, or the default thumbnail when it has none.
+
+        """
         image_url = find_image_url(feed_entry)
         if image_url is None:
             _LOGGER.debug(
@@ -250,7 +335,15 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
         return image_url
 
     def _process_link(self: FeedParserSensor, feed_entry: FeedEntry) -> str:
-        """Return link from feed entry."""
+        """Return link from feed entry.
+
+        Args:
+            feed_entry (FeedEntry): Entry of the parsed feed.
+
+        Returns:
+            str: URL of the first link of the entry, or an empty string when it has none.
+
+        """
         if len(feed_entry.get("links", ())) > 1:
             _LOGGER.debug(
                 "Feed %s: More than one link found for %s. Using the first link.",
@@ -261,24 +354,44 @@ class FeedParserSensor(SensorEntity):  # pylint: disable=too-many-instance-attri
 
     @property
     def feed_entries(self: FeedParserSensor) -> list[dict[str, Any]]:
-        """Return feed entries."""
+        """Return feed entries.
+
+        Returns:
+            list[dict[str, Any]]: Entries of the feed, as exposed by the sensor.
+
+        """
         if hasattr(self, "_entries"):
             return self._entries
         return []
 
     @property
     def local_time(self: FeedParserSensor) -> bool:
-        """Return local_time."""
+        """Return local_time.
+
+        Returns:
+            bool: Whether the dates of the entries are converted to the local time zone.
+
+        """
         return self._local_time
 
     @local_time.setter
     def local_time(self: FeedParserSensor, value: bool) -> None:
-        """Set local_time."""
+        """Set local_time.
+
+        Args:
+            value (bool): Whether to convert the dates of the entries to the local time zone.
+
+        """
         self._local_time = value
 
     @property
     def extra_state_attributes(  # pyright: ignore[reportIncompatibleVariableOverride]
         self: FeedParserSensor,
     ) -> dict[str, list[dict[str, Any]]]:
-        """Return entity specific state attributes."""
+        """Return entity specific state attributes.
+
+        Returns:
+            dict[str, list[dict[str, Any]]]: The entries of the feed, under the "entries" key.
+
+        """
         return {"entries": self.feed_entries}
